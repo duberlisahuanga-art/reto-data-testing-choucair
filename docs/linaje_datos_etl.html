@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linaje de Datos ETL & Auditoría QA | Choucair Data Testing</title>
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2234;
+            --bg-card-hover: #222d42;
+            --border-color: #2e3a52;
+            --border-focus: #3b82f6;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --text-dim: #6b7280;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-title h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-green {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .badge-blue {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .badge-purple {
+            background-color: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        /* SECTION TITLES */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            margin-top: 36px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f9fafb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header .subtext {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        /* SECTION 1: KPIS */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(145deg, var(--bg-secondary), var(--bg-card));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-focus);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--accent-emerald);
+        }
+
+        .kpi-card.blue::before { background-color: var(--accent-blue); }
+        .kpi-card.purple::before { background-color: var(--accent-purple); }
+        .kpi-card.cyan::before { background-color: var(--accent-cyan); }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .kpi-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .kpi-footer {
+            margin-top: 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #34d399;
+        }
+
+        /* SECTION 2: END-TO-END FLOW DIAGRAM */
+        .flow-container {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 36px;
+        }
+
+        .flow-grid {
+            display: grid;
+            grid-template-columns: 1fr 60px 1.2fr 60px 1fr;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .flow-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .flow-connector {
+                transform: rotate(90deg);
+                margin: 10px auto;
+            }
+        }
+
+        .flow-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .flow-col-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .flow-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+
+        .flow-card:hover {
+            border-color: var(--accent-cyan);
+            background-color: var(--bg-card-hover);
+        }
+
+        .flow-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flow-card-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .pill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .pill {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            background-color: rgba(255, 255, 255, 0.06);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #d1d5db;
+        }
+
+        .flow-connector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent-blue);
+        }
+
+        .engine-card {
+            background: linear-gradient(160deg, #1e293b, #0f172a);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .engine-step {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .engine-step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .step-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+        }
+
+        .step-desc {
+            font-size: 13px;
+            color: #e5e7eb;
+            margin-top: 2px;
+        }
+
+        /* SECTION 3: COLUMN LINEAGE MATRIX */
+        .lineage-layout {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 24px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 36px;
+        }
+
+        @media (max-width: 900px) {
+            .lineage-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col-selector-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .col-item-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .col-item-btn:hover {
+            background-color: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+        }
+
+        .col-item-btn.active {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-blue);
+            color: #93c5fd;
+            font-weight: 600;
+        }
+
+        .col-item-tag {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+        }
+
+        .col-detail-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value-highlight {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-box {
+            background-color: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: #a5f3fc;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .badge-rule {
+            display: inline-block;
+            background-color: rgba(139, 92, 246, 0.2);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .test-case-box {
+            background-color: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 13px;
+            color: #d1fae5;
+        }
+
+        /* SECTION 4: DATA AUDIT TABLES */
+        .tabs-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            border-color: var(--accent-blue);
+        }
+
+        .table-responsive {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow-x: auto;
+            margin-bottom: 36px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #e5e7eb;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .cell-mono {
+            font-family: var(--font-mono);
+        }
+
+        .tag-status-active {
+            color: #34d399;
+            background-color: rgba(16, 185, 129, 0.15);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .tag-status-inactive {
+            color: #f87171;
+            background-color: rgba(244, 63, 94, 0.15);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .tag-vinculo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .tag-as {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .tag-ah {
+            background-color: rgba(139, 92, 246, 0.2);
+            color: #c084fc;
+        }
+
+        .highlight-audit {
+            background-color: rgba(245, 158, 11, 0.15) !important;
+            border-left: 3px solid var(--accent-amber);
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: 48px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- HEADER -->
+    <header>
+        <div class="header-title">
+            <h1>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+                Data Lineage & Pipeline QA Certification
+            </h1>
+            <p>Reto Técnico Data Testing & DevOps: Migración Transaccional y Certificación de Calidad BD_Org &rarr; BD_Dst</p>
+        </div>
+        <div class="badges">
+            <span class="badge badge-green">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                QA Suite: PASS 
+            </span>
+            <span class="badge badge-blue">SQL Server 2022 </span>
+            <span class="badge badge-purple">Transact-SQL ACID</span>
+        </div>
+    </header>
+
+    <!-- SECTION 1: KPIS -->
+    <div class="section-header">
+        <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            Certificación QA & Volumetría (Regla 9)
+        </h2>
+        <span class="subtext">Validación ejecutada contra contenedor sql-choucair-qa</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-header">
+                <span class="kpi-title">Activos Migrados (Regla 1, 2)</span>
+                <span class="badge badge-green">QA-01A</span>
+            </div>
+            <div class="kpi-value">5 / 5</div>
+            <div class="kpi-footer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                100% Cuadre en dbo.Vinculación
+            </div>
+        </div>
+
+        <div class="kpi-card cyan">
+            <div class="kpi-header">
+                <span class="kpi-title">Inactivos Segregados (Regla 8)</span>
+                <span class="badge badge-green">QA-01B</span>
+            </div>
+            <div class="kpi-value">4 / 4</div>
+            <div class="kpi-footer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                100% Cuadre en dbo.Rechazos
+            </div>
+        </div>
+
+        <div class="kpi-card blue">
+            <div class="kpi-header">
+                <span class="kpi-title">Duplicados en Destino (Regla 1)</span>
+                <span class="badge badge-green">QA-02A</span>
+            </div>
+            <div class="kpi-value">0</div>
+            <div class="kpi-footer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Unicidad estricta por Cédula PK
+            </div>
+        </div>
+
+        <div class="kpi-card purple">
+            <div class="kpi-header">
+                <span class="kpi-title">Hallazgos Anómalos Totales</span>
+                <span class="badge badge-green">QA-02B a 02G</span>
+            </div>
+            <div class="kpi-value">0</div>
+            <div class="kpi-footer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Integridad Referencial y FKs al 100%
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: END-TO-END FLOW -->
+    <div class="section-header">
+        <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            Arquitectura de Flujo End-to-End
+        </h2>
+        <span class="subtext">Diagrama interactivo del pipeline de migración transaccional</span>
+    </div>
+
+    <div class="flow-container">
+        <div class="flow-grid">
+            <!-- STAGE 1: ORIGEN -->
+            <div class="flow-col">
+                <div class="flow-col-title">
+                    <span style="color: #60a5fa;">●</span> Origen: BD_Org
+                </div>
+                <div class="flow-card">
+                    <div class="flow-card-title">
+                        <span>dbo.Asociados</span>
+                        <span class="badge badge-blue">Prioritario</span>
+                    </div>
+                    <div class="flow-card-meta">6 Registros Sintéticos (Activos + Inactivos)</div>
+                    <div class="pill-list">
+                        <span class="pill">Cedula (PK)</span>
+                        <span class="pill">Nombre</span>
+                        <span class="pill">Dirección</span>
+                        <span class="pill">Teléfono</span>
+                        <span class="pill">Sexo (0/1)</span>
+                        <span class="pill">FNacimiento</span>
+                        <span class="pill">EstCivil (0-3)</span>
+                        <span class="pill">Estado</span>
+                    </div>
+                </div>
+
+                <div class="flow-card">
+                    <div class="flow-card-title">
+                        <span>dbo.Ahorradores</span>
+                        <span class="badge badge-purple">Complementario</span>
+                    </div>
+                    <div class="flow-card-meta">6 Registros Sintéticos (Aporta email + gaps)</div>
+                    <div class="pill-list">
+                        <span class="pill">Cedula (PK)</span>
+                        <span class="pill">Nombre</span>
+                        <span class="pill">Dirección</span>
+                        <span class="pill">Teléfono</span>
+                        <span class="pill" style="border: 1px solid var(--accent-cyan); color: #a5f3fc;">email</span>
+                        <span class="pill">Sexo</span>
+                        <span class="pill">FNacimiento</span>
+                        <span class="pill">EstCivil</span>
+                        <span class="pill">Estado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONNECTOR 1 -->
+            <div class="flow-connector">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+
+            <!-- STAGE 2: ETL ENGINE -->
+            <div class="flow-col">
+                <div class="flow-col-title">
+                    <span style="color: #38bdf8;">●</span> Pipeline T-SQL ACID (03_etl_migracion.sql)
+                </div>
+                <div class="engine-card">
+                    <div class="engine-step">
+                        <div class="step-label">Paso 1: Segregación & Full Outer Join</div>
+                        <div class="step-desc">Unifica por Cédula evaluando Estado Activo (Paso A) e Inactivo (Paso B).</div>
+                    </div>
+                    <div class="engine-step">
+                        <div class="step-label">Paso 2: Sanitización de Cadenas en Blanco</div>
+                        <div class="step-desc"><code>NULLIF(LTRIM(RTRIM(col)), '')</code> elimina espacios y valida datos vacíos.</div>
+                    </div>
+                    <div class="engine-step">
+                        <div class="step-label">Paso 3: Regla de Prevalencia & Fallback</div>
+                        <div class="step-desc"><code>COALESCE(Asociados, Ahorradores)</code> garantiza prioridad oficial.</div>
+                    </div>
+                    <div class="engine-step">
+                        <div class="step-label">Paso 4: Homologación & Data Quality Gate</div>
+                        <div class="step-desc">Mapeo estricto de catálogos y fallback a <code>'ND'</code> para violar FK ante anomalías.</div>
+                    </div>
+                    <div class="engine-step">
+                        <div class="step-label">Paso 5: Derivación de Vínculo</div>
+                        <div class="step-desc">Si existe en Asociados &rarr; <code>'AS'</code>, si solo existe en Ahorradores &rarr; <code>'AH'</code>.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONNECTOR 2 -->
+            <div class="flow-connector">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+
+            <!-- STAGE 3: DESTINO -->
+            <div class="flow-col">
+                <div class="flow-col-title">
+                    <span style="color: #34d399;">●</span> Destino: BD_Dst
+                </div>
+                <div class="flow-card" style="border-left: 3px solid var(--accent-emerald);">
+                    <div class="flow-card-title">
+                        <span>dbo.Vinculación</span>
+                        <span class="badge badge-green">5 Activos</span>
+                    </div>
+                    <div class="flow-card-meta">Entidad de Clientes Activos Unificados</div>
+                    <div class="pill-list">
+                        <span class="pill">Cedula (PK)</span>
+                        <span class="pill">TipVinculación (FK)</span>
+                        <span class="pill">EstCivil (FK)</span>
+                    </div>
+                </div>
+
+                <div class="flow-card" style="border-left: 3px solid var(--accent-rose);">
+                    <div class="flow-card-title">
+                        <span>dbo.Rechazos</span>
+                        <span class="badge" style="background: rgba(244,63,94,0.15); color: #f43f5e; border: 1px solid rgba(244,63,94,0.4);">4 Inactivos</span>
+                    </div>
+                    <div class="flow-card-meta">Entidad de Control para Inactivos (Regla 8)</div>
+                    <div class="pill-list">
+                        <span class="pill">Cedula (PK)</span>
+                        <span class="pill">TipVinculación (FK)</span>
+                        <span class="pill">EstCivil (FK)</span>
+                    </div>
+                </div>
+
+                <div class="flow-card">
+                    <div class="flow-card-title">
+                        <span>Tablas Catálogo FK</span>
+                    </div>
+                    <div class="flow-card-meta">dbo.EstadoCivil (4) & dbo.TipoVinculo (2)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3: COLUMN LINEAGE MATRIX -->
+    <div class="section-header">
+        <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            Column-Level Lineage Interactivo (Mapeo STM)
+        </h2>
+        <span class="subtext">Haz clic en cualquier campo destino para auditar su transformación, regla y caso de prueba</span>
+    </div>
+
+    <div class="lineage-layout">
+        <!-- SELECTOR LIST -->
+        <div class="col-selector-list" id="colSelectorList">
+            <!-- Buttons injected by JS -->
+        </div>
+
+        <!-- DETAIL INSPECTOR -->
+        <div class="col-detail-panel" id="colDetailPanel">
+            <!-- Injected by JS -->
+        </div>
+    </div>
+
+    <!-- SECTION 4: AUDITORÍA DE DATOS DESTINO -->
+    <div class="section-header">
+        <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            Auditoría de Datos Destino (Evidencias de Ejecución)
+        </h2>
+        <span class="subtext">Dataset verificado en SQL Server tras ejecución de 03_etl_migracion.sql</span>
+    </div>
+
+    <div class="tabs-header">
+        <button class="tab-btn active" id="tabVinculacionBtn" onclick="switchTab('vinculacion')">
+            dbo.Vinculación (5 Registros Activos)
+        </button>
+        <button class="tab-btn" id="tabRechazosBtn" onclick="switchTab('rechazos')">
+            dbo.Rechazos (4 Registros Inactivos)
+        </button>
+    </div>
+
+    <!-- TAB 1: VINCULACION -->
+    <div class="table-responsive" id="tableVinculacion">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>email</th>
+                    <th>Sexo</th>
+                    <th>FNacimiento</th>
+                    <th>EstCivil</th>
+                    <th>Estado</th>
+                    <th>TipVinculación</th>
+                    <th>Observación de Auditoría</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cell-mono"><strong>1001</strong></td>
+                    <td>Carlos Mendoza</td>
+                    <td>Av. Javier Prado 450, San Isidro</td>
+                    <td class="cell-mono">999111222</td>
+                    <td style="color: var(--text-dim);"><em>NULL</em></td>
+                    <td><span class="pill">M</span></td>
+                    <td class="cell-mono">1990-05-15</td>
+                    <td><span class="pill">SO</span></td>
+                    <td><span class="tag-status-active">Activo</span></td>
+                    <td><span class="tag-vinculo tag-as">AS</span></td>
+                    <td>Solo Asociado Activo.</td>
+                </tr>
+                <tr>
+                    <td class="cell-mono"><strong>1002</strong></td>
+                    <td>Andrés Silva</td>
+                    <td>Av. El Ejército 310, Miraflores</td>
+                    <td class="cell-mono">944333222</td>
+                    <td style="color: var(--accent-cyan);">andres.silva@email.com</td>
+                    <td><span class="pill">M</span></td>
+                    <td class="cell-mono">1992-09-14</td>
+                    <td><span class="pill">UL</span></td>
+                    <td><span class="tag-status-active">Activo</span></td>
+                    <td><span class="tag-vinculo tag-ah">AH</span></td>
+                    <td>Solo Ahorrador Activo. TipVinculación 'AH'.</td>
+                </tr>
+                <tr>
+                    <td class="cell-mono"><strong>1003</strong></td>
+                    <td>Lucía Fernández (Dato Oficial Asociado)</td>
+                    <td>Calle Los Pinos 120</td>
+                    <td class="cell-mono">988777666</td>
+                    <td style="color: var(--accent-cyan);">lucia.fernandez@email.com</td>
+                    <td><span class="pill">F</span></td>
+                    <td class="cell-mono">1988-11-20</td>
+                    <td><span class="pill">CA</span></td>
+                    <td><span class="tag-status-active">Activo</span></td>
+                    <td><span class="tag-vinculo tag-as">AS</span></td>
+                    <td>Duplicada: prevalecen datos oficiales de Asociado; incorpora email.</td>
+                </tr>
+                <tr class="highlight-audit">
+                    <td class="cell-mono"><strong>1004</strong></td>
+                    <td>Jorge Ramírez</td>
+                    <td><strong>Av. Larco 780, Miraflores</strong></td>
+                    <td class="cell-mono"><strong>933222111</strong></td>
+                    <td style="color: var(--accent-cyan);">jorge.ramirez@email.com</td>
+                    <td><span class="pill">M</span></td>
+                    <td class="cell-mono">1985-03-10</td>
+                    <td><span class="pill"><strong>CA</strong></span></td>
+                    <td><span class="tag-status-active">Activo</span></td>
+                    <td><span class="tag-vinculo tag-as">AS</span></td>
+                    <td><strong>Regla 4 (Gap Filling):</strong> Dirección, teléfono y EstCivil en blanco en Asociados fueron completados desde Ahorradores.</td>
+                </tr>
+                <tr>
+                    <td class="cell-mono"><strong>1008</strong></td>
+                    <td>Sofía Vargas</td>
+                    <td>Av. Salaverry 1450</td>
+                    <td class="cell-mono">955444333</td>
+                    <td style="color: var(--text-dim);"><em>NULL</em></td>
+                    <td><span class="pill">F</span></td>
+                    <td class="cell-mono">1995-07-22</td>
+                    <td><span class="pill">SO</span></td>
+                    <td><span class="tag-status-active">Activo</span></td>
+                    <td><span class="tag-vinculo tag-as">AS</span></td>
+                    <td><strong>Caso Borde:</strong> Activa en Asociados (prevalece en Vinculación).</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TAB 2: RECHAZOS -->
+    <div class="table-responsive" id="tableRechazos" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>email</th>
+                    <th>Sexo</th>
+                    <th>FNacimiento</th>
+                    <th>EstCivil</th>
+                    <th>Estado</th>
+                    <th>TipVinculación</th>
+                    <th>Observación de Auditoría</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cell-mono"><strong>1005</strong></td>
+                    <td>Elena Torres</td>
+                    <td>Jr. Las Camelias 890</td>
+                    <td class="cell-mono">977666555</td>
+                    <td style="color: var(--text-dim);"><em>NULL</em></td>
+                    <td><span class="pill">F</span></td>
+                    <td class="cell-mono">1975-08-30</td>
+                    <td><span class="pill">VI</span></td>
+                    <td><span class="tag-status-inactive">Inactivo</span></td>
+                    <td><span class="tag-vinculo tag-as">AS</span></td>
+                    <td>Solo Asociada Inactiva migrada a Rechazos.</td>
+                </tr>
+                <tr>
+                    <td class="cell-mono"><strong>1006</strong></td>
+                    <td>Patricia Castro</td>
+                    <td>Calle Berlín 412</td>
+                    <td class="cell-mono">922111000</td>
+                    <td style="color: var(--accent-cyan);">patricia.castro@email.com</td>
+                    <td><span class="pill">F</span></td>
+                    <td class="cell-mono">1980-12-05</td>
+                    <td><span class="pill">CA</span></td>
+                    <td><span class="tag-status-inactive">Inactivo</span></td>
+                    <td><span class="tag-vinculo tag-ah">AH</span></td>
+                    <td>Solo Ahorradora Inactiva migrada a Rechazos.</td>
+                </tr>
+                <tr>
+                    <td class="cell-mono"><strong>1007</strong></td>
+                    <td>Ricardo Gómez (Asociado Inactivo)</td>
+                    <td>Av. Arequipa 2300</td>
+                    <td class="cell-mono">966555444</td>
+                    <td style="color: var(--accent-cyan);">ricardo.gomez@email.com</td>
+                    <td><span class="pill">M</span></td>
+                    <td class="cell-mono">1982-01-12</td>
+                    <td><span class="pill">UL</span></td>
+                    <td><span class="tag-status-inactive">Inactivo</span></td>
+                    <td><span class="tag-vinculo tag-as">AS</span></td>
+                    <td>Inactivo en ambos: prevalece datos de Asociado y adjunta email.</td>
+                </tr>
+                <tr class="highlight-audit">
+                    <td class="cell-mono"><strong>1008</strong></td>
+                    <td>Sofía Vargas</td>
+                    <td>Av. Salaverry 1450</td>
+                    <td class="cell-mono">955444333</td>
+                    <td style="color: var(--accent-cyan);">sofia.vargas@email.com</td>
+                    <td><span class="pill">F</span></td>
+                    <td class="cell-mono">1995-07-22</td>
+                    <td><span class="pill">SO</span></td>
+                    <td><span class="tag-status-inactive">Inactivo</span></td>
+                    <td><span class="tag-vinculo tag-ah">AH</span></td>
+                    <td><strong>Caso Borde:</strong> Registro inactivo de Ahorradora preservado para trazabilidad en Rechazos como 'AH'.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>Reto Técnico Data Testing & QA Automation &bull; Choucair Cárdenas Testing &bull; SQL Server 2022 &bull; Docker Container: <code>sql-choucair-qa</code></p>
+    </footer>
+</div>
+
+<script>
+    // DATA DICTIONARY FOR COLUMN-LEVEL LINEAGE
+    const columnData = [
+        {
+            id: 'Cedula',
+            name: 'Cedula',
+            dataType: 'VARCHAR(20) NOT NULL PRIMARY KEY',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.Cedula', 'BD_Org.dbo.Ahorradores.Cedula'],
+            ruleBadge: 'Regla 1 y 2 (Unicidad & Unificación)',
+            ruleDesc: 'Es posible que la persona exista en Asociados y Ahorradores; se unifica garantizando 1 único registro por persona en destino. Pasa los que están en Asociados, los que están en Ahorradores y unifica los comunes.',
+            tsql: 'COALESCE(aso.Cedula, aho.Cedula) AS Cedula',
+            testCase: 'Cédula 1003 (Lucía Fernández) y 1007 (Ricardo Gómez) existen en ambas fuentes y quedan con exactamente 1 registro en Vinculación y Rechazos respectivamente (0 duplicados).'
+        },
+        {
+            id: 'Nombre',
+            name: 'Nombre',
+            dataType: 'VARCHAR(100) NULL',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.Nombre', 'BD_Org.dbo.Ahorradores.Nombre'],
+            ruleBadge: 'Regla 3 y 4 (Prevalencia & Fallback)',
+            ruleDesc: 'Al migrar prevalecen los datos de Asociados. Si el campo en Asociados está vacío o en blanco, se toma de Ahorradores.',
+            tsql: "COALESCE(NULLIF(LTRIM(RTRIM(aso.Nombre)), ''), NULLIF(LTRIM(RTRIM(aho.Nombre)), '')) AS Nombre",
+            testCase: 'Cédula 1003: Prevalece "Lucía Fernández (Dato Oficial Asociado)" sobre "Lucía Fernández (Dato Antiguo Ahorrador)".'
+        },
+        {
+            id: 'Direccion',
+            name: 'Dirección',
+            dataType: 'VARCHAR(150) NULL',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.Dirección', 'BD_Org.dbo.Ahorradores.Dirección'],
+            ruleBadge: 'Regla 4 (Relleno de Blancos)',
+            ruleDesc: 'Prevalece Asociados. Si está en blanco o solo con espacios en blanco, se actualiza automáticamente con la dirección de Ahorradores.',
+            tsql: "COALESCE(NULLIF(LTRIM(RTRIM(aso.Dirección)), ''), NULLIF(LTRIM(RTRIM(aho.Dirección)), '')) AS Dirección",
+            testCase: 'Cédula 1004 (Jorge Ramírez): En Asociados la dirección era cadena vacía \'\'; la migración rescata exitosamente "Av. Larco 780, Miraflores" de Ahorradores.'
+        },
+        {
+            id: 'Telefono',
+            name: 'Teléfono',
+            dataType: 'VARCHAR(20) NULL',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.Teléfono', 'BD_Org.dbo.Ahorradores.Teléfono'],
+            ruleBadge: 'Regla 4 (Sanitización y Relleno)',
+            ruleDesc: 'Prevalece Asociados. Cadenas de solo espacios en blanco se limpian con LTRIM/RTRIM y se hace fallback al valor de Ahorradores.',
+            tsql: "COALESCE(NULLIF(LTRIM(RTRIM(aso.Teléfono)), ''), NULLIF(LTRIM(RTRIM(aho.Teléfono)), '')) AS Teléfono",
+            testCase: 'Cédula 1004 (Jorge Ramírez): En Asociados el teléfono contenía espacios \'   \'; se actualiza con "933222111" de Ahorradores.'
+        },
+        {
+            id: 'email',
+            name: 'email',
+            dataType: 'VARCHAR(100) NULL',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Ahorradores.email (Exclusivo)'],
+            ruleBadge: 'Mapeo Directo & Enriquecimiento',
+            ruleDesc: 'El campo email no existe en la tabla Asociados. Se transfiere exclusivamente desde Ahorradores, aportando el dato cuando la persona está en ambas tablas.',
+            tsql: "NULLIF(LTRIM(RTRIM(aho.email)), '') AS email",
+            testCase: 'Cédula 1003 (Lucía Fernández): Toma "lucia.fernandez@email.com" desde Ahorradores manteniendo sus datos oficiales de Asociado.'
+        },
+        {
+            id: 'Sexo',
+            name: 'Sexo',
+            dataType: "CHAR(2) NOT NULL CHECK (Sexo IN ('M', 'F'))",
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.Sexo', 'BD_Org.dbo.Ahorradores.Sexo'],
+            ruleBadge: 'Regla 6 (Homologación de Códigos)',
+            ruleDesc: 'Mapeo oficial de origen a destino (según guía oficial): 0 -> \'M\' (Masculino), 1 -> \'F\' (Femenino). Si llega un dato no tipificado se emite \'ND\' para activar el CHECK constraint preventivo.',
+            tsql: `CASE COALESCE(NULLIF(LTRIM(RTRIM(aso.Sexo)), ''), NULLIF(LTRIM(RTRIM(aho.Sexo)), ''))
+    WHEN '0' THEN 'M'
+    WHEN '1' THEN 'F'
+    ELSE 'ND' -- Quality Gate
+END AS Sexo`,
+            testCase: 'Cédula 1001 (0 -> M), Cédula 1003 (1 -> F). QA-02D certifica 0 valores nulos o diferentes de \'M\' y \'F\'.'
+        },
+        {
+            id: 'FNacimiento',
+            name: 'FNacimiento',
+            dataType: 'DATE NULL',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.FNacimiento', 'BD_Org.dbo.Ahorradores.FNacimiento'],
+            ruleBadge: 'Regla 3 y 4 (Prevalencia)',
+            ruleDesc: 'Fecha de nacimiento oficial de Asociados; si es NULL en Asociados, se hereda desde Ahorradores.',
+            tsql: 'COALESCE(aso.FNacimiento, aho.FNacimiento) AS FNacimiento',
+            testCase: 'Cédula 1001 preserva 1990-05-15 y Cédula 1002 preserva 1992-09-14 sin alteración de zona horaria.'
+        },
+        {
+            id: 'EstCivil',
+            name: 'EstCivil',
+            dataType: 'CHAR(2) NOT NULL (FK a dbo.EstadoCivil)',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.EstCivil', 'BD_Org.dbo.Ahorradores.EstCivil'],
+            ruleBadge: 'Regla 7 (Homologación Catálogo FK)',
+            ruleDesc: 'Homologación de códigos origen a catálogo destino: 0 -> \'SO\' (Soltero), 1 -> \'CA\' (Casado), 2 -> \'UL\' (Unión Libre), 3 -> \'VI\' (Viudo). Prevalece Asociados; si es NULL o vacío, toma de Ahorradores.',
+            tsql: `CASE COALESCE(NULLIF(LTRIM(RTRIM(aso.EstCivil)), ''), NULLIF(LTRIM(RTRIM(aho.EstCivil)), ''))
+    WHEN '0' THEN 'SO'
+    WHEN '1' THEN 'CA'
+    WHEN '2' THEN 'UL'
+    WHEN '3' THEN 'VI'
+    ELSE 'ND' -- Viola FK si es inválido
+END AS EstCivil`,
+            testCase: 'Cédula 1004: En Asociados EstCivil era NULL; se completa con el valor \'1\' de Ahorradores homologado a \'CA\'. QA-02E certifica integridad referencial total.'
+        },
+        {
+            id: 'Estado',
+            name: 'Estado',
+            dataType: 'VARCHAR(15) NOT NULL',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['BD_Org.dbo.Asociados.Estado', 'BD_Org.dbo.Ahorradores.Estado'],
+            ruleBadge: 'Regla 8 (Filtro y Segregación)',
+            ruleDesc: 'Registros con Estado = \'Activo\' migran a dbo.Vinculación. Registros con Estado = \'Inactivo\' migran a dbo.Rechazos.',
+            tsql: "COALESCE(NULLIF(LTRIM(RTRIM(aso.Estado)), ''), NULLIF(LTRIM(RTRIM(aho.Estado)), '')) AS Estado",
+            testCase: 'QA-02B y QA-02C confirman 0 registros Inactivos en Vinculación y 0 registros Activos en Rechazos.'
+        },
+        {
+            id: 'TipVinculacion',
+            name: 'TipVinculación',
+            dataType: 'CHAR(2) NOT NULL (FK a dbo.TipoVinculo)',
+            targetTable: 'dbo.Vinculación / dbo.Rechazos',
+            sources: ['Derivado de presencia en BD_Org.dbo.Asociados / BD_Org.dbo.Ahorradores'],
+            ruleBadge: 'Regla 5 (Derivación de Vínculo)',
+            ruleDesc: 'Si existe en Asociados y no en Ahorradores -> \'AS\'. Si existe en Ahorradores y no en Asociados -> \'AH\'. Si existe en ambas entidades -> \'AS\' ya que prevalece la información como Asociado.',
+            tsql: `CASE 
+    WHEN aso.Cedula IS NOT NULL THEN 'AS'
+    ELSE 'AH'
+END AS TipVinculación`,
+            testCase: 'Cédula 1001 (\'AS\'), Cédula 1002 (\'AH\'), Cédula 1003 (en ambos -> \'AS\'). QA-02F certifica 0 violaciones de FK.'
+        }
+    ];
+
+    let currentSelectedCol = columnData[0].id;
+
+    function renderColumnButtons() {
+        const listContainer = document.getElementById('colSelectorList');
+        listContainer.innerHTML = '';
+
+        columnData.forEach(col => {
+            const btn = document.createElement('button');
+            btn.className = `col-item-btn ${col.id === currentSelectedCol ? 'active' : ''}`;
+            btn.onclick = () => selectColumn(col.id);
+
+            btn.innerHTML = `
+                <span>${col.name}</span>
+                <span class="col-item-tag">${col.ruleBadge.split(' ')[0]}</span>
+            `;
+            listContainer.appendChild(btn);
+        });
+    }
+
+    function renderDetailPanel() {
+        const col = columnData.find(c => c.id === currentSelectedCol);
+        if (!col) return;
+
+        const panel = document.getElementById('colDetailPanel');
+        panel.innerHTML = `
+            <div class="detail-row">
+                <div class="detail-label">Columna Destino</div>
+                <div class="detail-value-highlight">
+                    <span>${col.name}</span>
+                    <span class="pill" style="font-size: 12px; color: var(--accent-cyan); border: 1px solid var(--accent-cyan);">${col.dataType}</span>
+                </div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">Tabla destino: <code>${col.targetTable}</code></div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Fuentes de Origen</div>
+                <div class="pill-list" style="margin-top: 4px;">
+                    ${col.sources.map(s => `<span class="pill" style="background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd;">${s}</span>`).join('')}
+                </div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Regla de Negocio Aplicada</div>
+                <div>
+                    <span class="badge-rule">${col.ruleBadge}</span>
+                    <p style="font-size: 13.5px; color: #e5e7eb; margin-top: 8px;">${col.ruleDesc}</p>
+                </div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Expresión Transact-SQL (Pipeline ETL)</div>
+                <div class="code-box">${escapeHtml(col.tsql)}</div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Caso de Prueba Sintético Asociado</div>
+                <div class="test-case-box">
+                    <strong>Evidencia de Validación:</strong> ${col.testCase}
+                </div>
+            </div>
+        `;
+    }
+
+    function selectColumn(colId) {
+        currentSelectedCol = colId;
+        renderColumnButtons();
+        renderDetailPanel();
+    }
+
+    function escapeHtml(string) {
+        return String(string)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function switchTab(tabId) {
+        const tabVinculacion = document.getElementById('tableVinculacion');
+        const tabRechazos = document.getElementById('tableRechazos');
+        const btnVinculacion = document.getElementById('tabVinculacionBtn');
+        const btnRechazos = document.getElementById('tabRechazosBtn');
+
+        if (tabId === 'vinculacion') {
+            tabVinculacion.style.display = 'block';
+            tabRechazos.style.display = 'none';
+            btnVinculacion.classList.add('active');
+            btnRechazos.classList.remove('active');
+        } else {
+            tabVinculacion.style.display = 'none';
+            tabRechazos.style.display = 'block';
+            btnVinculacion.classList.remove('active');
+            btnRechazos.classList.add('active');
+        }
+    }
+
+    // Initialize
+    renderColumnButtons();
+    renderDetailPanel();
+</script>
+
+</body>
+</html>
